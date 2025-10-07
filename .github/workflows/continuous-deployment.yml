@@ -33,7 +33,6 @@ jobs:
           OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           ARTIFACT_LC=$(echo "${ARTIFACT}" | tr '[:upper:]' '[:lower:]')
           echo "IMAGE=${{ env.GHCR_URL }}/${OWNER_LC}/${ARTIFACT_LC}" >> $GITHUB_ENV
-
       # 1º Crear Token de Acceso Personal:
       #    GitHub → Settings → Developer settings → Personal access tokens → Generate new token (classic)
       #    Permisos mínimos: write:packages, read:packages, delete:packages, repo
