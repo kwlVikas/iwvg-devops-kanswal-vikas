@@ -1,5 +1,5 @@
 package es.upm.miw.devops.code;
-
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -45,7 +45,6 @@ public class Searches {
                 // Devolvemos su id
                 .map(User::getId);
     }
-
 
     public Fraction findFractionMultiplicationByUserFamilyName(String familyName) {
         return null;
@@ -100,7 +99,24 @@ public class Searches {
     }
 
     public Fraction findFractionAdditionByUserId(String id) {
-        return null;
+        List<Fraction> frs = new UsersDatabase().findAll()
+                .filter(u -> id.equals(u.getId()))
+                .findFirst()
+                .map(User::getFractions)
+                .orElse(List.of());
+
+        if (frs.isEmpty()) {
+            return null;
+        }
+
+        int num = 0;
+        int den = 1;
+        for (Fraction f : frs) {
+            if (f == null) continue;               // ignora nulos
+            num = num * f.getDenominator() + f.getNumerator() * den;
+            den = den * f.getDenominator();
+        }
+        return new Fraction(num, den);              // sin simplificar (coherente con tus tests)
     }
 
     public Fraction findFirstFractionSubtractionByUserName(String name) {

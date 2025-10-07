@@ -60,7 +60,33 @@ class SearchesTest {
         assertThat(obtained).allMatch(d -> d < 0.0d);
     }
 
+    @Test
     void testFindFractionAdditionByUserId() {
+        // Elegimos un usuario real de la base con >= 1 fracción no nula
+        User target = new UsersDatabase().findAll()
+                .filter(u -> u.getFractions() != null && u.getFractions().stream().anyMatch(Objects::nonNull))
+                .findFirst()
+                .orElse(null);
+
+        if (target == null) {
+            // Si no hay ninguno en el dataset, el contrato es devolver null
+            assertThat(new Searches().findFractionAdditionByUserId("no-exists")).isNull();
+            return;
+        }
+
+        // Calculamos el esperado con la misma regla matemática (sin simplificar)
+        int num = 0;
+        int den = 1;
+        for (Fraction f : target.getFractions()) {
+            if (f == null) continue;
+            num = num * f.getDenominator() + f.getNumerator() * den;
+            den = den * f.getDenominator();
+        }
+
+        Fraction obtained = new Searches().findFractionAdditionByUserId(target.getId());
+        assertThat(obtained).isNotNull();
+        assertThat(obtained.getNumerator()).isEqualTo(num);
+        assertThat(obtained.getDenominator()).isEqualTo(den);
     }
 
     void testFindFractionSubtractionByUserName() {
