@@ -51,8 +51,27 @@ public class Searches {
     }
 
     public Fraction findFirstFractionDivisionByUserId(String id) {
-        return null;
+        // Tomamos las dos primeras fracciones NO nulas del usuario con ese id
+        List<Fraction> fractions = new UsersDatabase().findAll()
+                .filter(u -> id.equals(u.getId()))
+                .findFirst()
+                .map(User::getFractions)
+                .orElse(List.of());
+
+        Fraction f1 = fractions.stream().filter(Objects::nonNull).findFirst().orElse(null);
+        Fraction f2 = fractions.stream().filter(Objects::nonNull).skip(1).findFirst().orElse(null);
+
+        if (f1 == null || f2 == null) {
+            return null; // no hay suficientes fracciones para dividir
+        }
+
+        // (a/b) ÷ (c/d) = (a*d) / (b*c)  (sin simplificar)
+        return new Fraction(
+                f1.getNumerator() * f2.getDenominator(),
+                f1.getDenominator() * f2.getNumerator()
+        );
     }
+
 
     public Double findFirstDecimalFractionByUserName(String name) {
         return null;
