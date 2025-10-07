@@ -36,6 +36,17 @@ public class Searches {
         return Stream.empty();
     }
 
+    public Stream<String> findUserIdBySomeProperFraction() {
+        return new UsersDatabase().findAll()
+                // Nos quedamos solo con los usuarios que tengan al menos UNA fracción propia
+                .filter(user -> user.getFractions().stream()
+                        .filter(Objects::nonNull)
+                        .anyMatch(f -> f.getNumerator() < f.getDenominator()))
+                // Devolvemos su id
+                .map(User::getId);
+    }
+
+
     public Fraction findFractionMultiplicationByUserFamilyName(String familyName) {
         return null;
     }
