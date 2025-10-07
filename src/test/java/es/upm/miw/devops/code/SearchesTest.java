@@ -109,5 +109,36 @@ class SearchesTest {
         // Mismo orden y contenido exacto
         assertThat(obtained).containsExactlyElementsOf(expected);
     }
+    @Test
+    void testFindFirstFractionDivisionByUserId() {
+        // Elegimos un usuario que tenga al menos 2 fracciones no nulas
+        User target = new UsersDatabase().findAll()
+                .filter(u -> u.getFractions() != null
+                        && u.getFractions().stream().filter(Objects::nonNull).limit(2).count() >= 2)
+                .findFirst()
+                .orElse(null);
+
+        if (target == null) {
+            // Si tu dataset no tiene ningún usuario con >= 2 fracciones, el contrato es devolver null
+            assertThat(new Searches().findFirstFractionDivisionByUserId("no-exists")).isNull();
+            return;
+        }
+
+        // Calculamos el esperado a partir de las dos primeras fracciones no nulas
+        Fraction f1 = target.getFractions().stream().filter(Objects::nonNull).findFirst().orElse(null);
+        Fraction f2 = target.getFractions().stream().filter(Objects::nonNull).skip(1).findFirst().orElse(null);
+
+        Fraction expected = new Fraction(
+                f1.getNumerator() * f2.getDenominator(),
+                f1.getDenominator() * f2.getNumerator()
+        );
+
+        Fraction obtained = new Searches().findFirstFractionDivisionByUserId(target.getId());
+
+        assertThat(obtained).isNotNull();
+        assertThat(obtained.getNumerator()).isEqualTo(expected.getNumerator());
+        assertThat(obtained.getDenominator()).isEqualTo(expected.getDenominator());
+    }
+
 
 }
