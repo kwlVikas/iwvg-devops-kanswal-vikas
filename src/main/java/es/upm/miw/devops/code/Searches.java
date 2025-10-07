@@ -81,7 +81,11 @@ public class Searches {
     }
 
     public Stream<Double> findDecimalFractionByNegativeSignFraction() {
-        return Stream.empty();
+        return new UsersDatabase().findAll()
+                .flatMap(u -> u.getFractions().stream())
+                .filter(Objects::nonNull)
+                .filter(f -> (long) f.getNumerator() * (long) f.getDenominator() < 0)
+                .map(Fraction::decimal);
     }
 
     public Fraction findFractionAdditionByUserId(String id) {
