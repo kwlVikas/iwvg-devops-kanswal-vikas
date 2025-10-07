@@ -68,4 +68,20 @@ class SearchesTest {
 
     void testFindFractionMultiplicationByUserFamilyName() {
     }
+    @Test
+    void testFindUserIdBySomeProperFraction() {
+        // Construimos el esperado directamente desde la base de datos
+        List<String> expected = new UsersDatabase().findAll()
+                .filter(user -> user.getFractions().stream()
+                        .filter(Objects::nonNull)
+                        .anyMatch(f -> f.getNumerator() < f.getDenominator()))
+                .map(User::getId)
+                .toList();
+
+        List<String> obtained = new Searches().findUserIdBySomeProperFraction().toList();
+
+        // Mismo orden y contenido exacto
+        assertThat(obtained).containsExactlyElementsOf(expected);
+    }
+
 }
