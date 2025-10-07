@@ -28,12 +28,8 @@ jobs:
         run: |
           echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
           echo "ARTIFACT=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
-      - name: 🔤 Normalize image name (lowercase)
-        run: |
-          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          ARTIFACT_LC=$(echo "${ARTIFACT}" | tr '[:upper:]' '[:lower:]')
-          echo "IMAGE=${{ env.GHCR_URL }}/${OWNER_LC}/${ARTIFACT_LC}" >> $GITHUB_ENV
-
+      - name: Lowercase repository name
+        run: echo "REPOSITORY=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       # 1º Crear Token de Acceso Personal:
       #    GitHub → Settings → Developer settings → Personal access tokens → Generate new token (classic)
       #    Permisos mínimos: write:packages, read:packages, delete:packages, repo
@@ -65,3 +61,4 @@ jobs:
           curl --fail -X POST "https://api.render.com/deploy/${{ secrets.RENDER_DEPLOY_HOOK_TOKEN }}" \
           && echo "✅ Deployment succeeded" \
           || (echo "❌ Deployment failed" && exit 1)
+          

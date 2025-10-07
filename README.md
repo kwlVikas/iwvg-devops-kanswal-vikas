@@ -12,7 +12,7 @@
 ### Estado del código
 [![CI](https://github.com/kwlVikas/iwvg-devops-kanswal-vikas/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/kwlVikas/iwvg-devops-kanswal-vikas/actions/workflows/continuous-integration.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kwlVikas_iwvg-devops-kanswal-vikas&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kwlVikas_iwvg-devops-kanswal-vikas)
-[![Render broken](https://iwvg-devops-latest.onrender.com/version-badge)](https://iwvg-devops-latest.onrender.com/swagger-ui.html)
+[![Render broken](https://iwvg-devops-kansawl-vikas-latest.onrender.com/version-badge)](https://iwvg-devops-kanswal-vikas-latest.onrender.com/swagger-ui.html)
 
 
 ### Tecnologías necesarias
