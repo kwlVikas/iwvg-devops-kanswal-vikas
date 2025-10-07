@@ -57,6 +57,38 @@ public class Fraction {
         return (double) numerator / denominator;
     }
 
+    /** 🔹 Devuelve true si la fracción es propia (numerador < denominador) */
+    public boolean isProper() {
+        return Math.abs(this.numerator) < Math.abs(this.denominator);
+    }
+
+    /** 🔹 Devuelve true si la fracción es impropia (numerador > denominador) */
+    public boolean isImproper() {
+        return Math.abs(this.numerator) > Math.abs(this.denominator);
+    }
+
+    /** 🔹 Dos fracciones son equivalentes si a*d == b*c */
+    public boolean isEquivalent(Fraction other) {
+        return this.numerator * other.denominator == this.denominator * other.numerator;
+    }
+
+    /** 🔹 Suma de fracciones: (a/b + c/d) = (ad + bc) / bd */
+    public Fraction add(Fraction other) {
+        int num = this.numerator * other.denominator + other.numerator * this.denominator;
+        int den = this.denominator * other.denominator;
+        return new Fraction(num, den);
+    }
+
+    /** 🔹 Multiplicación de fracciones: (a/b * c/d) = (ac) / (bd) */
+    public Fraction multiply(Fraction other) {
+        return new Fraction(this.numerator * other.numerator, this.denominator * other.denominator);
+    }
+
+    /** 🔹 División de fracciones: (a/b ÷ c/d) = (a*d) / (b*c) */
+    public Fraction divide(Fraction other) {
+        return new Fraction(this.numerator * other.denominator, this.denominator * other.numerator);
+    }
+
     @Override
     public String toString() {
         return "Fraction{" +
