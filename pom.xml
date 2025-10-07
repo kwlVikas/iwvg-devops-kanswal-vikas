@@ -13,7 +13,7 @@
     </parent>
 
     <groupId>es.upm.miw</groupId>
-    <artifactId>iwvg-devops-template</artifactId>
+    <artifactId>iwvg-devops-kanswal-vikas</artifactId>
     <version>5.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
