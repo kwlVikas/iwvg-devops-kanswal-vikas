@@ -118,25 +118,35 @@ public class Searches {
     }
 
     public Fraction findFractionAdditionByUserId(String id) {
-        List<Fraction> frs = new UsersDatabase().findAll()
+        List<Fraction> fractions = new UsersDatabase().findAll()
                 .filter(u -> id.equals(u.getId()))
                 .findFirst()
                 .map(User::getFractions)
                 .orElse(List.of());
 
-        if (frs.isEmpty()) {
+        if (fractions.isEmpty()) {
             return null;
         }
 
         int num = 0;
         int den = 1;
-        for (Fraction f : frs) {
-            if (f == null) continue;               // ignora nulos
+
+        for (Fraction f : fractions) {
+            if (f == null || f.getDenominator() == 0) {
+                continue; // ❗ Nueva mejora: ignorar fracciones inválidas
+            }
             num = num * f.getDenominator() + f.getNumerator() * den;
             den = den * f.getDenominator();
         }
-        return new Fraction(num, den);              // sin simplificar (coherente con tus tests)
+
+        // Si después de filtrar no se sumó nada, devolvemos null
+        if (num == 0 && den == 1) {
+            return null;
+        }
+
+        return new Fraction(num, den);
     }
+
 
     public Fraction findFirstFractionSubtractionByUserName(String name) {
         return null;
