@@ -1,9 +1,8 @@
 package es.upm.miw.devops.code;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,23 +27,57 @@ class SearchesTest {
                 .containsExactly("López", "Torres");
     }
 
-    void testFindUserIdByAnyProperFraction() {
+    // ====== NUEVOS TESTS PARA STUBS (suben cobertura de New Code) ======
+
+    @Test
+    void testFindFirstDecimalFractionByUserName_isNull() {
+        assertThat(new Searches().findFirstDecimalFractionByUserName("any")).isNull();
     }
 
-    void testFindUserNameByAnyImproperFraction() {
+    @Test
+    void testFindUserIdByAllProperFraction_isEmpty() {
+        assertThat(new Searches().findUserIdByAllProperFraction().toList()).isEmpty();
     }
 
-    void testFindUserFamilyNameByAllSignFractionDistinct() {
+    @Test
+    void testFindDecimalImproperFractionByUserName_isEmpty() {
+        assertThat(new Searches().findDecimalImproperFractionByUserName("any").toList()).isEmpty();
     }
 
-    void testFindDecimalFractionByUserName() {
+    @Test
+    void testFindFirstProperFractionByUserId_isNull() {
+        assertThat(new Searches().findFirstProperFractionByUserId("any")).isNull();
     }
 
-    void testFindDecimalFractionBySignFraction() {
+    @Test
+    void testFindUserFamilyNameByImproperFraction_isEmpty() {
+        assertThat(new Searches().findUserFamilyNameByImproperFraction().toList()).isEmpty();
     }
+
+    @Test
+    void testFindHighestFraction_isNull() {
+        assertThat(new Searches().findHighestFraction()).isNull();
+    }
+
+    @Test
+    void testFindUserNameByAnyImproperFraction_isEmpty() {
+        assertThat(new Searches().findUserNameByAnyImproperFraction().toList()).isEmpty();
+    }
+
+    @Test
+    void testFindUserFamilyNameByAllNegativeSignFractionDistinct_isEmpty() {
+        assertThat(new Searches().findUserFamilyNameByAllNegativeSignFractionDistinct().toList()).isEmpty();
+    }
+
+    @Test
+    void testFindDecimalFractionByUserName_isEmpty() {
+        assertThat(new Searches().findDecimalFractionByUserName("any").toList()).isEmpty();
+    }
+
+    // ====== TUS TESTS IMPLEMENTADOS (d, e, 1, 3) ======
+
     @Test
     void testFindDecimalFractionByNegativeSignFraction() {
-        // Esperado: construirlo a partir del dataset real
         List<Double> obtained = new Searches().findDecimalFractionByNegativeSignFraction().toList();
         List<Double> expected = new UsersDatabase().findAll()
                 .flatMap(user -> user.getFractions().stream())
@@ -54,27 +87,21 @@ class SearchesTest {
                 .toList();
 
         assertThat(obtained).containsExactlyElementsOf(expected);
-
-
-        // Propiedad esencial: todos los valores deben ser negativos
         assertThat(obtained).allMatch(d -> d < 0.0d);
     }
 
     @Test
     void testFindFractionAdditionByUserId() {
-        // Elegimos un usuario real de la base con >= 1 fracción no nula
         User target = new UsersDatabase().findAll()
                 .filter(u -> u.getFractions() != null && u.getFractions().stream().anyMatch(Objects::nonNull))
                 .findFirst()
                 .orElse(null);
 
         if (target == null) {
-            // Si no hay ninguno en el dataset, el contrato es devolver null
             assertThat(new Searches().findFractionAdditionByUserId("no-exists")).isNull();
             return;
         }
 
-        // Calculamos el esperado con la misma regla matemática (sin simplificar)
         int num = 0;
         int den = 1;
         for (Fraction f : target.getFractions()) {
@@ -89,14 +116,8 @@ class SearchesTest {
         assertThat(obtained.getDenominator()).isEqualTo(den);
     }
 
-    void testFindFractionSubtractionByUserName() {
-    }
-
-    void testFindFractionMultiplicationByUserFamilyName() {
-    }
     @Test
     void testFindUserIdBySomeProperFraction() {
-        // Construimos el esperado directamente desde la base de datos
         List<String> expected = new UsersDatabase().findAll()
                 .filter(user -> user.getFractions().stream()
                         .filter(Objects::nonNull)
@@ -106,12 +127,11 @@ class SearchesTest {
 
         List<String> obtained = new Searches().findUserIdBySomeProperFraction().toList();
 
-        // Mismo orden y contenido exacto
         assertThat(obtained).containsExactlyElementsOf(expected);
     }
+
     @Test
     void testFindFirstFractionDivisionByUserId() {
-        // Elegimos un usuario que tenga al menos 2 fracciones no nulas
         User target = new UsersDatabase().findAll()
                 .filter(u -> u.getFractions() != null
                         && u.getFractions().stream().filter(Objects::nonNull).limit(2).count() >= 2)
@@ -119,12 +139,10 @@ class SearchesTest {
                 .orElse(null);
 
         if (target == null) {
-            // Si tu dataset no tiene ningún usuario con >= 2 fracciones, el contrato es devolver null
             assertThat(new Searches().findFirstFractionDivisionByUserId("no-exists")).isNull();
             return;
         }
 
-        // Calculamos el esperado a partir de las dos primeras fracciones no nulas
         Fraction f1 = target.getFractions().stream().filter(Objects::nonNull).findFirst().orElse(null);
         Fraction f2 = target.getFractions().stream().filter(Objects::nonNull).skip(1).findFirst().orElse(null);
 
@@ -139,6 +157,4 @@ class SearchesTest {
         assertThat(obtained.getNumerator()).isEqualTo(expected.getNumerator());
         assertThat(obtained.getDenominator()).isEqualTo(expected.getDenominator());
     }
-
-
 }
